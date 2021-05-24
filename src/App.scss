@@ -1,0 +1,27 @@
+.site-layout-content {
+  min-height: 280px;
+  padding: 24px;
+  background: #fff;
+  border-radius: 15px;
+  margin-top: 2rem;
+
+  .header-with-icon {
+    display: table;
+    height: 15px;
+    border-spacing: 0.5rem;
+    h1 {
+      display: table-cell;
+      vertical-align: middle;
+    }
+    .anticon {
+      display: table-cell;
+      vertical-align: middle;
+    }
+  }
+}
+
+/* Overwrite Antd css
+*/
+.ant-layout-content {
+  padding: 0px 35px;
+}

@@ -1,3 +1,15 @@
+# Setup
+Create app using Create React App:
+```
+npx create-react-app name-of-app --template typescript
+```
+
+Install antd
+```
+npm install --save antd @ant-design/icons
+```
+_______________________________________________________
+
 # Getting Started with Create React App
 
 This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
