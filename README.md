@@ -4,10 +4,12 @@ Create app using Create React App:
 npx create-react-app name-of-app --template typescript
 ```
 
-Install antd
+Install antd and sass
 ```
-npm install --save antd @ant-design/icons
+npm install --save antd @ant-design/icons node-sass
 ```
+
+Rename `.css` files to `.scss`
 _______________________________________________________
 
 # Getting Started with Create React App
