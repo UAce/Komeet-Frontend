@@ -1,0 +1,15 @@
+.site-layout-content {
+  min-height: 280px;
+  padding: 24px;
+  background: #fff;
+  border-radius: 15px;
+  margin-top: 2rem;
+}
+
+/**
+  * Overwrite Antd scss
+  */
+.ant-layout-content {
+  padding: 0px 35px;
+  min-height: calc(100vh - 64px - 70px);
+}

@@ -1,0 +1,17 @@
+/**
+ * Overwrite React modern date picker
+ */
+.Cal__Today__chevron {
+  margin-left: 3.5rem !important;
+}
+.Cal__Day__root.Cal__Day__selected .Cal__Day__selection {
+  height: 47px;
+  width: 47px;
+}
+
+/**
+ * Overwrite Antd scss
+ */
+.ant-form-item-control {
+  width: 350px;
+}
