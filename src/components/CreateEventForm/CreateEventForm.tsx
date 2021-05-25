@@ -1,10 +1,5 @@
 import React, { useState } from 'react';
 import { Tooltip, Form, Radio, Input, Button, Checkbox, Divider } from 'antd';
-// import InfiniteCalendar, {
-//     Calendar,
-//     defaultMultipleDateInterpolation,
-//     withMultipleDates
-// } from 'react-infinite-calendar';
 import InfiniteCalendar, {
     Calendar,
     withMultipleDates,
@@ -13,9 +8,10 @@ import format from 'date-fns/format';
 import 'react-infinite-calendar/styles.css'; // Make sure to import the default stylesheet
 import 'antd/dist/antd.css'
 
-import AppLayout from '../AppLayout/AppLayout';
 import { QuestionCircleOutlined } from '@ant-design/icons';
 import './CreateEventForm.scss';
+import { CheckboxChangeEvent } from 'antd/lib/checkbox';
+import { CheckboxValueType } from 'antd/lib/checkbox/Group';
 
 type CalendarType = 'dates' | 'days';
 
@@ -30,11 +26,10 @@ const CheckboxGroup = Checkbox.Group;
 const MultipleDatesCalendar = withMultipleDates(Calendar);
 
 const CreateEventForm: React.FC<CreateEventFormProps> = () => {
-    // const plainOptions = ['Apple', 'Pear', 'Orange'];
-    // const defaultCheckedList = ['Apple', 'Orange'];
+    const plainOptions = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'];
+    const defaultCheckedList: CheckboxValueType[] = [];
     const [form] = Form.useForm();
     const [calendarType, setCalendarType] = useState<CalendarType>('dates');
-    const [selectedDates, setSelectedDates] = useState<Array<Date>>([]);
     const today = new Date();
     const thisWeek = new Date(today.getFullYear(), today.getMonth(), today.getDate());
     const onFormChange = (eventFormData: EventForm) => {
@@ -44,11 +39,26 @@ const CreateEventForm: React.FC<CreateEventFormProps> = () => {
         const selectedMap = selected.map(function (date) {
             return format(date, 'yyyy-MM-dd');
         });
-        console.log(selectedMap);
-        console.log(format(date, 'yyyy-MM-dd'));
         const index = selectedMap.indexOf(format(date, 'yyyy-MM-dd'));
-        console.log(index);
         return index === -1 ? ([] as Date[]).concat(selected, [date]) : ([] as Date[]).concat(selected.slice(0, index), selected.slice(index + 1));
+    };
+
+
+
+    const [checkedList, setCheckedList] = useState<CheckboxValueType[]>(defaultCheckedList);
+    const [indeterminate, setIndeterminate] = useState(true);
+    const [checkAll, setCheckAll] = useState(false);
+
+    const onChange = (list: CheckboxValueType[]) => {
+        setCheckedList(list);
+        setIndeterminate(!!list.length && list.length < plainOptions.length);
+        setCheckAll(list.length === plainOptions.length);
+    };
+
+    const onCheckAllChange = (e: CheckboxChangeEvent) => {
+        setCheckedList(e.target.checked ? plainOptions : []);
+        setIndeterminate(false);
+        setCheckAll(e.target.checked);
     };
     return (
         <div>
@@ -56,6 +66,7 @@ const CreateEventForm: React.FC<CreateEventFormProps> = () => {
                 <h1>Create an Event</h1>
                 <Tooltip placement="top" title='Create an event, what else?'><QuestionCircleOutlined /></Tooltip>
             </div>
+            <Divider />
             <Form
                 form={form}
                 layout="vertical"
@@ -75,30 +86,28 @@ const CreateEventForm: React.FC<CreateEventFormProps> = () => {
                         <Radio.Button value='days'>DAYS OF WEEK</Radio.Button>
                     </Radio.Group>
                 </Form.Item>
-                {/* <div className="ant-row ant-form-item">
-                    
-                </div> */}
-                {/* <InfiniteCalendar
-                    Component={MultipleDatesCalendar}
-                    interpolateSelection={defaultMultipleDateInterpolation}
-                    width={350}
-                    height={400}
-                    selected={today}
-                    minDate={thisWeek}
-                /> */}
-                <InfiniteCalendar
-                    Component={MultipleDatesCalendar}
-                    interpolateSelection={defaultMultipleDateInterpolation}
-                    width={350}
-                    height={400}
-                    selected={[today]}
-                    minDate={thisWeek}
-                />
+                {
+                    calendarType === 'dates' ? <InfiniteCalendar
+                        Component={MultipleDatesCalendar}
+                        interpolateSelection={defaultMultipleDateInterpolation}
+                        width={350}
+                        height={400}
+                        selected={[today]}
+                        minDate={thisWeek}
+                    /> : <div>
+                        {/* <Checkbox indeterminate={indeterminate} onChange={onCheckAllChange} checked={checkAll}>
+                            Check all
+                        </Checkbox>
+                        <Divider /> */}
+                        <CheckboxGroup options={plainOptions} value={checkedList} onChange={onChange} />
+                        <Divider />
+                    </div>
+                }
                 <Form.Item>
                     <Button type="primary">Create Event</Button>
                 </Form.Item>
             </Form>
-        </div>
+        </div >
     );
 };
 
