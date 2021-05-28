@@ -1,25 +1,24 @@
-import React, { useState, useEffect } from 'react';
-import { Menu } from 'antd';
-import { Link, RouteComponentProps, withRouter } from 'react-router-dom';
+import React, { useState, useEffect } from "react";
+import { Menu } from "antd";
+import { Link, RouteComponentProps, withRouter } from "react-router-dom";
 
-interface HeaderMenuProps extends RouteComponentProps {
-}
+interface HeaderMenuProps extends RouteComponentProps {}
 
 const HeaderMenu: React.FC<HeaderMenuProps> = ({ location }) => {
-    const [selectedKey, setSelectedKey] = useState<string>('');
+    const [selectedKey, setSelectedKey] = useState<string>("");
 
     useEffect(() => {
         const currentPath = location.pathname;
         switch (currentPath) {
-            case '/about':
-                setSelectedKey('2');
+            case "/about":
+                setSelectedKey("2");
                 break;
-            case '/updates':
-                setSelectedKey('3');
+            case "/updates":
+                setSelectedKey("3");
                 break;
-            case '/':
+            case "/":
             default:
-                setSelectedKey('1');
+                setSelectedKey("1");
                 break;
         }
     }, [location]);
@@ -41,6 +40,6 @@ const HeaderMenu: React.FC<HeaderMenuProps> = ({ location }) => {
         //     <Menu.Item key="3">nav 3</Menu.Item>
         // </Menu>
     );
-}
+};
 
 export default withRouter(HeaderMenu);
