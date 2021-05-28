@@ -1,0 +1,25 @@
+.debug-wrapper {
+    position: absolute;
+    z-index: 9;
+    display: "flex";
+}
+.debug-info {
+    // background: rgba(201, 200, 200, 0.5);
+    background: rgb(32, 134, 250);
+    width: fit-content;
+    padding: 0.5rem;
+    border-radius: 16px;
+    cursor: move;
+    h3 {
+        color: white;
+        text-align: center;
+    }
+    textarea {
+        background: rgb(200, 225, 255);
+        border-radius: 16px;
+        border: none;
+        padding: 1rem;
+        font-family: "Lucida Sans", "Lucida Sans Regular", "Lucida Grande", "Lucida Sans Unicode", Geneva, Verdana,
+            sans-serif;
+    }
+}

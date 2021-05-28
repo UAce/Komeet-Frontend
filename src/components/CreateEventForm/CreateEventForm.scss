@@ -2,16 +2,23 @@
  * Overwrite React modern date picker
  */
 .Cal__Today__chevron {
-  margin-left: 3.5rem !important;
+    margin-left: 3.5rem !important;
 }
 .Cal__Day__root.Cal__Day__selected .Cal__Day__selection {
-  height: 47px;
-  width: 47px;
+    height: 47px;
+    width: 47px;
+}
+
+.Cal__Header__root {
+    border-radius: 16px 16px 0 0;
+}
+.Cal__Container__listWrapper {
+    border-radius: 0 0 16px 16px;
 }
 
 /**
  * Overwrite Antd scss
  */
 .ant-form-item-control {
-  width: 350px;
+    width: 350px;
 }
