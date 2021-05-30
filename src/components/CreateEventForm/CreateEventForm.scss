@@ -1,3 +1,11 @@
+.create-event-button-wrapper {
+    button {
+        padding: 1rem;
+        border-radius: 30px;
+        height: inherit;
+    }
+}
+
 /**
  * Overwrite React modern date picker
  */
@@ -9,6 +17,12 @@
     width: 47px;
 }
 
+.Cal__Container__root {
+    margin: 0 auto;
+    width: 350px;
+    max-width: 400px;
+    max-height: 450px;
+}
 .Cal__Header__root {
     border-radius: 16px 16px 0 0;
 }

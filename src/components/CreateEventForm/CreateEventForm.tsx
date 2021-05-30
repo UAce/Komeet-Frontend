@@ -1,9 +1,9 @@
-import React, { FormEventHandler, useState } from "react";
-import { Form, Radio, Input, notification, Button, Space, Checkbox, Divider } from "antd";
+import React, { useState } from "react";
+import { Form, Radio, Input, notification, Button, Checkbox, Divider } from "antd";
 
-import InfiniteCalendar, { Calendar, withMultipleDates } from "react-infinite-calendar";
+import { Calendar, withMultipleDates } from "react-infinite-calendar";
 import format from "date-fns/format";
-import "react-infinite-calendar/styles.css"; // Make sure to import the default stylesheet
+import "react-infinite-calendar/styles.css";
 import "antd/dist/antd.css";
 
 import "./CreateEventForm.scss";
@@ -29,73 +29,77 @@ const CreateEventForm: React.FC<CreateEventFormProps> = () => {
     const defaultselectedDays: CheckboxValueType[] = [];
     const [form] = Form.useForm();
     const [calendarType, setCalendarType] = useState<CalendarType>("dates");
-    const [formData, setFormData] = useState<any>({ calendarType: "dates" });
     const today = new Date();
     const thisWeek = new Date(today.getFullYear(), today.getMonth(), today.getDate());
-    const [selectedDates, setSelectedDates] = useState<Date[]>([today]);
+    const [selectedDates, setSelectedDates] = useState<Date[]>([]);
     const [selectedDays, setSelectedDays] = useState<CheckboxValueType[]>(defaultselectedDays);
-    // const [checkAll, setCheckAll] = useState(false);
+    const [checkAll, setCheckAll] = useState(false);
+    const [indeterminate, setIndeterminate] = useState(true);
 
     // Handlers
     const onFormChange = (eventFormData: EventForm) => {
-        const newFormData = { ...formData, ...eventFormData };
         if (eventFormData.calendarType) {
             setCalendarType(eventFormData.calendarType);
-            if (eventFormData.calendarType === "dates") {
-                delete newFormData.days;
-                newFormData.dates = selectedDates;
-            } else {
-                delete newFormData.dates;
-                newFormData.days = selectedDays;
-            }
+            const currentlySelected = eventFormData.calendarType === "dates" ? selectedDates : selectedDays;
+            form.setFieldsValue({ selected: currentlySelected });
         }
-        setFormData(newFormData);
     };
     const defaultMultipleDateInterpolation = (date: Date, selected: Date[]) => {
         const selectedMap = selected.map(function(date) {
-            return format(date, "yyyy-MM-dd");
+            return format(date, "YYYY-MM-dd");
         });
-        const index = selectedMap.indexOf(format(date, "yyyy-MM-dd"));
+        const index = selectedMap.indexOf(format(date, "YYYY-MM-dd"));
         const currentlySelected =
             index === -1
                 ? ([] as Date[]).concat(selected, [date])
                 : ([] as Date[]).concat(selected.slice(0, index), selected.slice(index + 1));
         setSelectedDates(currentlySelected);
-        setFormData({ ...formData, dates: currentlySelected });
+        form.setFieldsValue({ selected: currentlySelected });
         return currentlySelected;
     };
 
     const onDayCheck = (currentlySelected: CheckboxValueType[]) => {
         setSelectedDays(currentlySelected);
-        setFormData({ ...formData, days: currentlySelected });
-        // setCheckAll(list.length === weekDaysOptions.length);
+        form.setFieldsValue({ selected: currentlySelected });
+        setIndeterminate(!!currentlySelected.length && currentlySelected.length < weekDaysOptions.length);
+        setCheckAll(currentlySelected.length === weekDaysOptions.length);
     };
-    // const onCheckAllChange = (e: CheckboxChangeEvent) => {
-    //     setSelectedDays(e.target.checked ? weekDaysOptions : []);
-    //     setCheckAll(e.target.checked);
-    // };
-    // const onSubmit: FormEventHandler<HTMLButtonElement> = e => {
-    //     e.preventDefault();
-    //     form.validateFields()
-    //         .then(values => {
-    //             console.log("Submit values", values);
-    //             throw new Error("test");
-    //             // Submit values
-    //             // submitValues(values);
-    //         })
-    //         .catch(error => {
-    //             console.error(error);
-    //             notification.error({
-    //                 message: `Failed to create event`,
-    //                 description: `Error: ${error.stack}`,
-    //                 placement: "topRight"
-    //             });
-    //         });
-    // };
+    const onCheckAllChange = (e: CheckboxChangeEvent) => {
+        const currentlySelected = e.target.checked ? weekDaysOptions : [];
+        setSelectedDays(currentlySelected);
+        form.setFieldsValue({ selected: currentlySelected });
+        setIndeterminate(false);
+        setCheckAll(e.target.checked);
+    };
+    const onFinish = (values: any) => {
+        console.log(values);
+        notification.info({
+            message: "Creating Event..",
+            placement: "topRight"
+        });
+        // TODO: Send request to server and redirect to Event page
+    };
+    const onFinishFailed = (values: any) => {
+        console.error(values);
+    };
     return (
         <>
-            <Form form={form} layout="vertical" initialValues={{ calendarType }} onValuesChange={onFormChange}>
-                <Form.Item label="Event Name" name="eventName" required>
+            {/* <DebugInfo data={form.getFieldsValue()} /> */}
+            <Form
+                form={form}
+                layout="vertical"
+                initialValues={{ calendarType }}
+                onValuesChange={onFormChange}
+                onFinish={onFinish}
+                onFinishFailed={onFinishFailed}
+                scrollToFirstError={true}
+            >
+                <Form.Item
+                    label="Event Name"
+                    name="eventName"
+                    required
+                    rules={[{ required: true, message: "Please enter an event name" }]}
+                >
                     <Input placeholder="e.g. March Book Club" />
                 </Form.Item>
                 <Form.Item label="Event Description" name="eventDescription">
@@ -109,28 +113,39 @@ const CreateEventForm: React.FC<CreateEventFormProps> = () => {
                     </Radio.Group>
                 </Form.Item>
                 {calendarType === "dates" ? (
-                    <MultipleDatesCalendar
-                        interpolateSelection={defaultMultipleDateInterpolation}
-                        width={350}
-                        height={400}
-                        selected={selectedDates}
-                        minDate={thisWeek}
-                        onSelect={(selectedDate: Date) => defaultMultipleDateInterpolation(selectedDate, selectedDates)}
-                    />
+                    <Form.Item name="selected" rules={[{ required: true, message: "Please select at least one date" }]}>
+                        <MultipleDatesCalendar
+                            width={400}
+                            height={400}
+                            interpolateSelection={defaultMultipleDateInterpolation}
+                            selected={selectedDates}
+                            minDate={thisWeek}
+                            onSelect={(selectedDate: Date) =>
+                                defaultMultipleDateInterpolation(selectedDate, selectedDates)
+                            }
+                        />
+                    </Form.Item>
                 ) : (
-                    <div>
-                        {/* <Checkbox indeterminate={indeterminate} onChange={onCheckAllChange} checked={checkAll}>
+                    <Form.Item
+                        name="selected"
+                        rules={[{ required: true, message: "Please select at least one day of the week" }]}
+                    >
+                        <Checkbox indeterminate={indeterminate} onChange={onCheckAllChange} checked={checkAll}>
                             Check all
                         </Checkbox>
-                        <Divider /> */}
-                        <CheckboxGroup options={weekDaysOptions} value={selectedDays} onChange={onDayCheck} />
                         <Divider />
-                    </div>
+                        <CheckboxGroup options={weekDaysOptions} value={selectedDays} onChange={onDayCheck} />{" "}
+                    </Form.Item>
                 )}
-                {/* <Button type="primary" htmlType="submit" onSubmit={onSubmit}>
-                Create Event
-            </Button> */}
-                <DebugInfo data={formData} />
+
+                <Divider />
+                <Form.Item>
+                    <div className="create-event-button-wrapper">
+                        <Button type="primary" htmlType="submit">
+                            Create Event
+                        </Button>
+                    </div>
+                </Form.Item>
             </Form>
         </>
     );
