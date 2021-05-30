@@ -1,46 +1,46 @@
 .create-event-button-wrapper {
-    button {
-        padding: 1rem;
-        border-radius: 30px;
-        height: inherit;
-    }
+  button {
+    padding: 1rem;
+    border-radius: 30px;
+    height: inherit;
+  }
 }
 
 /**
  * Overwrite React modern date picker
  */
 .Cal__Today__chevron {
-    margin-left: 3.5rem !important;
+  margin-left: 3.5rem !important;
 }
 .Cal__Day__root.Cal__Day__selected .Cal__Day__selection {
-    height: 47px;
-    width: 47px;
+  height: 47px;
+  width: 47px;
 }
 
 .Cal__Container__root {
-    margin: 0.5rem auto;
-    width: 100% !important;
-    max-width: 450px;
-    max-height: 300px;
+  margin: 0.5rem auto;
+  width: 100% !important;
+  max-width: 450px;
+  max-height: 300px;
 }
 .Cal__Header__root {
-    border-radius: 16px 16px 0 0;
+  border-radius: 16px 16px 0 0;
 }
 .Cal__Container__listWrapper {
-    border-radius: 0 0 16px 16px;
+  border-radius: 0 0 16px 16px;
 }
 
 /**
  * Overwrite Antd scss
  */
 .ant-form-item {
-    max-width: 450px;
-    margin: 1.5rem auto;
+  max-width: 450px;
+  margin: 1.5rem auto;
 }
 .ant-form-item-control {
-    width: 350px;
+  max-width: 100%;
 }
 
 .ant-form-item-explain-error {
-    text-align: left;
+  text-align: left;
 }
