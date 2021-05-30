@@ -115,8 +115,7 @@ const CreateEventForm: React.FC<CreateEventFormProps> = () => {
                 {calendarType === "dates" ? (
                     <Form.Item name="selected" rules={[{ required: true, message: "Please select at least one date" }]}>
                         <MultipleDatesCalendar
-                            width={400}
-                            height={400}
+                            height={250}
                             interpolateSelection={defaultMultipleDateInterpolation}
                             selected={selectedDates}
                             minDate={thisWeek}
