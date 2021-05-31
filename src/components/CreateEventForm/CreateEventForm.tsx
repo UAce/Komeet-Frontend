@@ -30,7 +30,7 @@ const CreateEventForm: React.FC<CreateEventFormProps> = ({ history }) => {
     const [selectedDays, setSelectedDays] = useState<CheckboxValueType[]>([]);
     const [checkAll, setCheckAll] = useState(false);
     const [indeterminate, setIndeterminate] = useState(true);
-    const datesToString = (dates: Date[]) => dates.map(date => format(date, "YYYY-MM-DD"));
+    const datesToString = (dates: Date[]) => dates.map((date) => format(date, "YYYY-MM-DD"));
 
     // Calendar Handlers
     const defaultMultipleDateInterpolation = (date: Date, selected: Date[]) => {
