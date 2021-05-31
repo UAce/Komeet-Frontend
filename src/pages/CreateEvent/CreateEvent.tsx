@@ -12,9 +12,9 @@ interface CreateEventProps {}
 const CreateEvent: React.FC<CreateEventProps> = () => {
     return (
         <div>
-            <div className="header-with-icon">
+            <div className="page-title-with-help">
                 <h1>Create an Event</h1>
-                <Tooltip placement="top" title="Create an event, what else?">
+                <Tooltip placement="top" title="Create an event duh">
                     <QuestionCircleOutlined />
                 </Tooltip>
             </div>

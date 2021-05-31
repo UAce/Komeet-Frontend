@@ -6,11 +6,7 @@ import "./Logo.scss";
 interface LogoProps {}
 
 const Logo: React.FC<LogoProps> = () => {
-    return (
-        <div className="logo">
-            <img src={logo} className="spin" alt="logo" />
-        </div>
-    );
+    return <img src={logo} className="logo spin" alt="logo" />;
 };
 
 export default Logo;

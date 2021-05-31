@@ -1,6 +1,6 @@
-import React, { useState } from "react";
+import React, { useState, useRef, RefObject, useEffect } from "react";
+import { RouteComponentProps, withRouter } from "react-router";
 import { Form, Radio, Input, notification, Button, Checkbox, Divider } from "antd";
-
 import { Calendar, withMultipleDates } from "react-infinite-calendar";
 import format from "date-fns/format";
 import "react-infinite-calendar/styles.css";
@@ -9,26 +9,22 @@ import "antd/dist/antd.css";
 import "./CreateEventForm.scss";
 import { CheckboxChangeEvent } from "antd/lib/checkbox";
 import { CheckboxValueType } from "antd/lib/checkbox/Group";
+import { CalendarType, EventFormData, CreateEventResponse } from "../../interfaces/EventInterfaces";
 import DebugInfo from "../DebugInfo/DebugInfo";
+import { createEvent } from "../../api/eventsApis";
+import CustomButton from "../CustomButton/CustomButton";
 
-type CalendarType = "dates" | "days";
-
-interface EventForm {
-    eventName: string;
-    eventDescription: string;
-    calendarType: CalendarType;
-}
-
-interface CreateEventFormProps {}
+interface CreateEventFormProps extends RouteComponentProps {}
 const CheckboxGroup = Checkbox.Group;
 const MultipleDatesCalendar = withMultipleDates(Calendar);
 
-const CreateEventForm: React.FC<CreateEventFormProps> = () => {
+const CreateEventForm: React.FC<CreateEventFormProps> = ({ history }) => {
     // consts
     const weekDaysOptions = ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"];
     const today = new Date();
     const thisWeek = new Date(today.getFullYear(), today.getMonth(), today.getDate());
     const [form] = Form.useForm();
+    const nameRef = useRef<Input>() as RefObject<Input>; // Ugly hack to fit the type
     const [calendarType, setCalendarType] = useState<CalendarType>("dates");
     const [selectedDates, setSelectedDates] = useState<Date[]>([]);
     const [selectedDays, setSelectedDays] = useState<CheckboxValueType[]>([]);
@@ -63,7 +59,7 @@ const CreateEventForm: React.FC<CreateEventFormProps> = () => {
     };
 
     // Form Handlers
-    const onFormChange = (eventFormData: EventForm) => {
+    const onFormChange = (eventFormData: EventFormData) => {
         if (eventFormData.calendarType) {
             setCalendarType(eventFormData.calendarType);
             const currentlySelected =
@@ -71,17 +67,33 @@ const CreateEventForm: React.FC<CreateEventFormProps> = () => {
             form.setFieldsValue({ selected: currentlySelected });
         }
     };
-    const onFormFinish = (values: any) => {
+    const onFormFinish = async (values: EventFormData) => {
         // console.log(values);
         notification.info({
             message: "Creating Event..",
             placement: "topRight"
         });
         // TODO: Send request to server and redirect to Event page
+        try {
+            const newEvent: CreateEventResponse = await createEvent(values);
+            history.push(`/event/${newEvent.id}`);
+        } catch (error) {
+            console.error(error);
+            notification.info({
+                message: "Oops, something went wrong creating your event",
+                description: "Please contact support",
+                placement: "topRight"
+            });
+        }
     };
     const onFormFinishFailed = (values: any) => {
         console.error(values);
     };
+
+    useEffect(() => {
+        // Ugly hack to autofocus on the event name input
+        nameRef!.current!.input.focus();
+    }, []);
     return (
         <Form
             form={form}
@@ -94,26 +106,30 @@ const CreateEventForm: React.FC<CreateEventFormProps> = () => {
         >
             <Form.Item
                 label="Event Name"
-                name="eventName"
+                name="name"
                 required
                 rules={[{ required: true, message: "Please enter an event name" }]}
             >
-                <Input placeholder="e.g. March Book Club" />
+                <Input autoFocus ref={nameRef} placeholder="e.g. March Book Club" />
             </Form.Item>
-            <Form.Item label="Event Description" name="eventDescription">
+            <Form.Item label="Event Description" name="description">
                 <Input placeholder="e.g. At Park Lafontaine from 2pm to 3pm" />
             </Form.Item>
 
             <Form.Item name="calendarType">
                 <Radio.Group buttonStyle="solid" value={calendarType}>
-                    <Radio.Button value="dates">SPECIFIC DATES</Radio.Button>
-                    <Radio.Button value="days">DAYS OF WEEK</Radio.Button>
+                    <Radio.Button style={{ borderRadius: "8px 0 0 8px" }} value="dates">
+                        SPECIFIC DATES
+                    </Radio.Button>
+                    <Radio.Button style={{ borderRadius: "0 8px 8px 0" }} value="days">
+                        DAYS OF WEEK
+                    </Radio.Button>
                 </Radio.Group>
             </Form.Item>
             {calendarType === "dates" ? (
                 <Form.Item name="selected" rules={[{ required: true, message: "Please select at least one date" }]}>
                     <MultipleDatesCalendar
-                        height={250}
+                        height={300}
                         interpolateSelection={defaultMultipleDateInterpolation}
                         selected={selectedDates}
                         minDate={thisWeek}
@@ -135,15 +151,16 @@ const CreateEventForm: React.FC<CreateEventFormProps> = () => {
 
             <Divider />
             <Form.Item>
-                <div className="create-event-button-wrapper">
+                {/* <div className="create-event-button-wrapper">
                     <Button type="primary" htmlType="submit">
                         Create Event
                     </Button>
-                </div>
+                </div> */}
+                <CustomButton text="Create Event" htmlType="submit" />
             </Form.Item>
             {/* <DebugInfo data={form.getFieldsValue()} /> */}
         </Form>
     );
 };
 
-export default CreateEventForm;
+export default withRouter(CreateEventForm);

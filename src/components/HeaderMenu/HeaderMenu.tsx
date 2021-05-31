@@ -17,15 +17,18 @@ const HeaderMenu: React.FC<HeaderMenuProps> = ({ location }) => {
                 setSelectedKey("3");
                 break;
             case "/":
-            default:
+            case "/new-event":
                 setSelectedKey("1");
+                break;
+            default:
+                setSelectedKey("");
                 break;
         }
     }, [location]);
     return (
         <Menu mode="horizontal" theme="dark" selectedKeys={[selectedKey]}>
             <Menu.Item key="1">
-                <Link to="/">Create an Event</Link>
+                <Link to="/new-event">Create an Event</Link>
             </Menu.Item>
             <Menu.Item key="2">
                 <Link to="/about">About</Link>

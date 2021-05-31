@@ -12,7 +12,7 @@ const NotFound: React.FC<NotFoundProps> = ({ history }) => {
             visible={true}
             closable={false}
             onOk={() => {
-                history.push("/");
+                history.push("/new-event");
             }}
             okText="Create an Event"
             width={600}

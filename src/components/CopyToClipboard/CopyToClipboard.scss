@@ -1,0 +1,24 @@
+button.custom-button {
+    padding: 4px 15px 4px 15px;
+    border-radius: 30px;
+    height: inherit;
+    display: "inline";
+    margin: 0 1rem;
+    width: 90px;
+    box-shadow: rgba(0, 0, 0, 0.1) 0px 3px 2px, rgba(0, 0, 0, 0.1) 0px 3px 2px;
+
+    &:disabled,
+    &:disabled:hover {
+        color: #fff;
+        background: #74bffb;
+        border-color: #74bffb;
+    }
+}
+
+.dummy-textarea {
+    position: absolute;
+    height: 0;
+    top: -50;
+    z-index: -1;
+    opacity: 0;
+}
