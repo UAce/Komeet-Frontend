@@ -11,7 +11,7 @@ import { CheckboxChangeEvent } from "antd/lib/checkbox";
 import { CheckboxValueType } from "antd/lib/checkbox/Group";
 import { CalendarType, EventFormData, CreateEventResponse } from "../../interfaces/EventInterfaces";
 import DebugInfo from "../DebugInfo/DebugInfo";
-import { createEvent } from "../../api/eventsApis";
+import { createEvent } from "../../api/EventsApis";
 import CustomButton from "../CustomButton/CustomButton";
 
 interface CreateEventFormProps extends RouteComponentProps {}
@@ -68,18 +68,12 @@ const CreateEventForm: React.FC<CreateEventFormProps> = ({ history }) => {
         }
     };
     const onFormFinish = async (values: EventFormData) => {
-        // console.log(values);
-        notification.info({
-            message: "Creating Event..",
-            placement: "topRight"
-        });
-        // TODO: Send request to server and redirect to Event page
         try {
             const newEvent: CreateEventResponse = await createEvent(values);
             history.push(`/event/${newEvent.id}`);
         } catch (error) {
             console.error(error);
-            notification.info({
+            notification.error({
                 message: "Oops, something went wrong creating your event",
                 description: "Please contact support",
                 placement: "topRight"
@@ -127,7 +121,11 @@ const CreateEventForm: React.FC<CreateEventFormProps> = ({ history }) => {
                 </Radio.Group>
             </Form.Item>
             {calendarType === "dates" ? (
-                <Form.Item name="selected" rules={[{ required: true, message: "Please select at least one date" }]}>
+                <Form.Item
+                    name="selected"
+                    id="weekdays"
+                    rules={[{ required: true, message: "Please select at least one date" }]}
+                >
                     <MultipleDatesCalendar
                         height={300}
                         interpolateSelection={defaultMultipleDateInterpolation}
@@ -138,6 +136,7 @@ const CreateEventForm: React.FC<CreateEventFormProps> = ({ history }) => {
                 </Form.Item>
             ) : (
                 <Form.Item
+                    id="calendar"
                     name="selected"
                     rules={[{ required: true, message: "Please select at least one day of the week" }]}
                 >
@@ -151,11 +150,6 @@ const CreateEventForm: React.FC<CreateEventFormProps> = ({ history }) => {
 
             <Divider />
             <Form.Item>
-                {/* <div className="create-event-button-wrapper">
-                    <Button type="primary" htmlType="submit">
-                        Create Event
-                    </Button>
-                </div> */}
                 <CustomButton text="Create Event" htmlType="submit" />
             </Form.Item>
             {/* <DebugInfo data={form.getFieldsValue()} /> */}

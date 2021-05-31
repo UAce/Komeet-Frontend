@@ -1,10 +1,9 @@
 import React, { MutableRefObject, useEffect, useRef, useState } from "react";
 import { RouteComponentProps } from "react-router";
 import { Divider, Skeleton, Spin } from "antd";
-import { getEventById } from "../../api/eventsApis";
+import { getEventById } from "../../api/EventsApis";
 
-import { Event } from "../../interfaces/EventInterfaces";
-import CustomButton from "../../components/CustomButton/CustomButton";
+import { Event, GetEventResponse } from "../../interfaces/EventInterfaces";
 import CopyToClipboard from "../../components/CopyToClipboard/CopyToClipboard";
 
 interface EventPageProps extends RouteComponentProps<{ eventId: string }> {}
@@ -15,7 +14,7 @@ const EventPage: React.FC<EventPageProps> = ({ match }) => {
     useEffect(() => {
         const getEvent = async () => {
             try {
-                const currentEvent = await getEventById(match.params.eventId);
+                const currentEvent: GetEventResponse = await getEventById(match.params.eventId);
                 setEvent(currentEvent);
                 console.log(currentEvent);
             } catch (error) {
@@ -44,12 +43,14 @@ const EventPage: React.FC<EventPageProps> = ({ match }) => {
                             <CopyToClipboard text="Copy Link" content={`http://localhost:4000/event/${event.id}`} />
                         </div>
                         <Divider />
+                    </div>
+                    <div style={{ textAlign: "left" }}>
                         <p>Max Participants: {event.maxParticipants}</p>
                         <p>Timezone: {event.timezone}</p>
                         <p>Start Time: {event.startTime}</p>
                         <p>End Time: {event.endTime}</p>
                         <p>
-                            {event.calendarType} selection:
+                            Selection {event.calendarType}:
                             <ul>
                                 {event.selected.map((item) => (
                                     <li>{item}</li>

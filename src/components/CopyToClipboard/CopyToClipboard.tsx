@@ -23,7 +23,7 @@ const CopyToClipboard: React.FC<CopyToClipboardProps> = ({ text, content, ...but
     return (
         <>
             <Button
-                className="custom-button"
+                className="copy-to-clipboard-button"
                 type="primary"
                 {...buttonProps}
                 onClick={copyText}

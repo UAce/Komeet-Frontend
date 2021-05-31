@@ -6,6 +6,12 @@ const eventAxios = axios.create({
     // headers: {}
 });
 
+// For testing
+export const getExampleEvent = async (): Promise<GetEventResponse> => {
+    const { data: event }: AxiosResponse = await eventAxios.get("/example");
+    return event;
+};
+
 export const getEventById = async (eventId: string): Promise<GetEventResponse> => {
     const { data: event }: AxiosResponse = await eventAxios.get(`/${eventId}`);
     return event;
