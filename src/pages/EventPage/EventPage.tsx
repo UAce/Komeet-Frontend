@@ -1,8 +1,9 @@
 import React, { MutableRefObject, useEffect, useRef, useState } from "react";
 import { RouteComponentProps } from "react-router";
 import { Divider, Skeleton, Spin } from "antd";
-import { getEventById } from "../../api/EventsApis";
+import { getEventById } from "../../common/api/EventsApis";
 
+import config from "../../common/config";
 import { Event, GetEventResponse } from "../../interfaces/EventInterfaces";
 import CopyToClipboard from "../../components/CopyToClipboard/CopyToClipboard";
 
@@ -11,11 +12,13 @@ interface EventPageProps extends RouteComponentProps<{ eventId: string }> {}
 const EventPage: React.FC<EventPageProps> = ({ match }) => {
     const linkRef = useRef<HTMLSpanElement>() as MutableRefObject<HTMLSpanElement>;
     const [event, setEvent] = useState<Event>();
+    const [eventLink, setEventLink] = useState<string>("");
     useEffect(() => {
         const getEvent = async () => {
             try {
                 const currentEvent: GetEventResponse = await getEventById(match.params.eventId);
                 setEvent(currentEvent);
+                setEventLink(`${config.baseURL}/event/${currentEvent.id}`);
                 console.log(currentEvent);
             } catch (error) {
                 console.error(error);
@@ -39,8 +42,10 @@ const EventPage: React.FC<EventPageProps> = ({ match }) => {
                         <Divider />
                         <div>
                             <span>Event Link: </span>
-                            <span ref={linkRef} className="link">{`http://localhost:4000/event/${event.id}`}</span>
-                            <CopyToClipboard text="Copy Link" content={`http://localhost:4000/event/${event.id}`} />
+                            <span ref={linkRef} className="link">
+                                {eventLink}
+                            </span>
+                            <CopyToClipboard text="Copy Link" content={eventLink} />
                         </div>
                         <Divider />
                     </div>

@@ -17,7 +17,7 @@ const AppLayout: React.FC<AppLayoutProps> = ({ children }) => {
                 <Content>
                     <div className="site-layout-content">{children}</div>
                 </Content>
-                <Footer style={{ textAlign: "center" }}>Ant Design ©2018 Created by Ant UED</Footer>
+                <Footer style={{ textAlign: "center" }}>Komeet ©2021 Created by UAce</Footer>
             </Layout>
         </Scrollbars>
     );

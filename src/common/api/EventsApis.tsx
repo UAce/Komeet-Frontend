@@ -1,8 +1,10 @@
 import axios, { AxiosResponse } from "axios";
-import { GetEventResponse, CreateEventResponse, EventFormData } from "../interfaces/EventInterfaces";
+
+import { GetEventResponse, CreateEventResponse, EventFormData } from "../../interfaces/EventInterfaces";
+import config from "../config";
 
 const eventAxios = axios.create({
-    baseURL: "http://localhost:4000/events" // for testing purposes
+    baseURL: `${config.baseURL}/events`
     // headers: {}
 });
 

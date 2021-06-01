@@ -11,7 +11,7 @@ import { CheckboxChangeEvent } from "antd/lib/checkbox";
 import { CheckboxValueType } from "antd/lib/checkbox/Group";
 import { CalendarType, EventFormData, CreateEventResponse } from "../../interfaces/EventInterfaces";
 import DebugInfo from "../DebugInfo/DebugInfo";
-import { createEvent } from "../../api/EventsApis";
+import { createEvent } from "../../common/api/EventsApis";
 import CustomButton from "../CustomButton/CustomButton";
 
 interface CreateEventFormProps extends RouteComponentProps {}

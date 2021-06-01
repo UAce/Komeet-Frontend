@@ -3,7 +3,7 @@ import { RouteComponentProps, withRouter } from "react-router";
 import { Divider, Spin } from "antd";
 import "antd/dist/antd.css";
 
-import { getExampleEvent } from "../../api/EventsApis";
+import { getExampleEvent } from "../../common/api/EventsApis";
 import { Event, GetEventResponse } from "../../interfaces/EventInterfaces";
 
 interface AboutProps extends RouteComponentProps {}
