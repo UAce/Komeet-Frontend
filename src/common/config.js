@@ -8,7 +8,7 @@ const prod = {
 
 const commonConfig = {
     paths: {
-        event: "/api/event"
+        event: "/api/events"
     }
 };
 
