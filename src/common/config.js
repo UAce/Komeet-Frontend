@@ -3,10 +3,18 @@ const dev = {
 };
 
 const prod = {
-    baseURL: "https://komeet.dev/api"
+    baseURL: "https://komeet.dev"
 };
 
-console.log(`ENV:`, process.env);
-const config = process.env.NODE_ENV === "production" ? prod : dev;
+const commonConfig = {
+    paths: {
+        event: "/api/event"
+    }
+};
 
+const envConfig = process.env.NODE_ENV === "production" ? prod : dev;
+const config = {
+    ...commonConfig,
+    ...envConfig
+};
 export default config;
