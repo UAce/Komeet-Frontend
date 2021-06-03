@@ -18,10 +18,10 @@ const CopyToClipboard: React.FC<CopyToClipboardProps> = ({ text, content, ...but
         setCopied(true);
         setTimeout(() => {
             setCopied(false);
-        }, 2000);
+        }, 1000);
     };
     return (
-        <>
+        <div>
             <Button
                 className="copy-to-clipboard-button"
                 type="primary"
@@ -32,7 +32,7 @@ const CopyToClipboard: React.FC<CopyToClipboardProps> = ({ text, content, ...but
                 {copied ? "Copied!" : text}
             </Button>
             <textarea ref={textAreaRef} className="dummy-textarea" value={content} />
-        </>
+        </div>
     );
 };
 

@@ -4,7 +4,7 @@ import { GetEventResponse, CreateEventResponse, EventFormData } from "../../inte
 import config from "../config";
 
 const eventAxios = axios.create({
-    baseURL: `${config.baseURL}` + `${config.paths.event}`
+    baseURL: `${config.baseURL}${config.paths.event}`
     // headers: {}
 });
 

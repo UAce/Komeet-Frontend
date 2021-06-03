@@ -1,4 +1,4 @@
-import React, { useState, useRef, RefObject, useEffect } from "react";
+import React, { useState, useRef, useEffect, MutableRefObject } from "react";
 import { RouteComponentProps, withRouter } from "react-router";
 import { Form, Radio, Input, notification, Checkbox, Divider, Select } from "antd";
 import { Calendar, withMultipleDates } from "react-infinite-calendar";
@@ -27,7 +27,7 @@ const CreateEventForm: React.FC<CreateEventFormProps> = ({ history }) => {
     const today = new Date();
     const thisWeek = new Date(today.getFullYear(), today.getMonth(), today.getDate());
     const [form] = Form.useForm();
-    const nameRef = useRef<Input>() as RefObject<Input>; // Ugly hack to fit the type
+    const nameRef = useRef<Input>() as MutableRefObject<Input>;
     const [calendarType, setCalendarType] = useState<CalendarType>("dates");
     const [selectedDates, setSelectedDates] = useState<Date[]>([]);
     const [selectedDays, setSelectedDays] = useState<CheckboxValueType[]>([]);
@@ -88,17 +88,18 @@ const CreateEventForm: React.FC<CreateEventFormProps> = ({ history }) => {
     };
 
     useEffect(() => {
-        // Ugly hack to autofocus on the event name input
-        nameRef!.current!.input.focus();
+        nameRef.current.input.focus();
     }, []);
     return (
         <Form
             form={form}
+            name="createEventForm"
             layout="vertical"
             initialValues={{ calendarType }}
             onValuesChange={onFormChange}
             onFinish={onFormFinish}
             scrollToFirstError={true}
+            style={{ textAlign: "center" }}
         >
             <div className="form-container">
                 <div className="form-subcontainer">
