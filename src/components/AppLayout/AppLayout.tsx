@@ -5,8 +5,9 @@ import { Scrollbars } from "react-custom-scrollbars";
 
 import "./AppLayout.scss";
 import AppHeader from "../AppHeader/AppHeader";
+import CustomFooter from "../CustomFooter/CustomFooter";
 
-const { Content, Footer } = Layout;
+const { Content } = Layout;
 
 interface AppLayoutProps {}
 const AppLayout: React.FC<AppLayoutProps> = ({ children }) => {
@@ -17,7 +18,7 @@ const AppLayout: React.FC<AppLayoutProps> = ({ children }) => {
                 <Content>
                     <div className="site-layout-content">{children}</div>
                 </Content>
-                <Footer style={{ textAlign: "center" }}>Komeet ©2021 Created by UAce</Footer>
+                <CustomFooter />
             </Layout>
         </Scrollbars>
     );

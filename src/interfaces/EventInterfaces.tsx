@@ -42,7 +42,10 @@ export interface CreateEventResponse extends Event {}
         name: 'March Book Club',
         description: 'At Park Lafontaine from 2pm to 3pm',
         calendarType: 'dates',
-        selected: ['2022-05-30']
+        selected: ['2022-05-30'],
+        startTime: '9:00',
+        endTime: '00:00',
+        timezone: 'America/Montreal'
     }
  */
 export interface EventFormData {
@@ -50,4 +53,7 @@ export interface EventFormData {
     description?: string;
     calendarType: CalendarType;
     selected: string[];
+    startTime: string;
+    endTime: string;
+    timezone: string;
 }

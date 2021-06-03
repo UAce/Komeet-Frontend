@@ -25,7 +25,7 @@ const EventPage: React.FC<EventPageProps> = ({ match }) => {
             }
         };
         getEvent();
-    }, []);
+    }, [match.params.eventId]);
     return (
         <div>
             {!event ? (

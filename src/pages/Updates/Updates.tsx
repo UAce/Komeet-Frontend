@@ -3,7 +3,11 @@ import "antd/dist/antd.css";
 
 interface UpdatesProps {}
 const Updates: React.FC<UpdatesProps> = () => {
-    return <div>Updates</div>;
+    return (
+        <div>
+            <h1>Updates</h1>
+        </div>
+    );
 };
 
 export default Updates;

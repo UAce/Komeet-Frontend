@@ -1,3 +1,15 @@
+.form-container {
+    display: flex;
+    flex-flow: row wrap;
+    justify-content: flex-start;
+}
+
+.form-subcontainer {
+    flex-grow: 3;
+    max-width: 700px;
+    min-height: 478px;
+}
+
 /**
  * Overwrite React modern date picker
  */
@@ -17,6 +29,17 @@
 }
 .Cal__Header__root {
     border-radius: 16px 16px 0 0;
+    min-height: 65px;
+}
+.Cal__Header__date {
+    font-size: 16px;
+    line-height: 20px;
+}
+.Cal__Header__wrapper.Cal__Header__blank {
+    height: 25px;
+}
+.Cal__Slider__slide {
+    padding-top: 15px;
 }
 .Cal__Container__listWrapper {
     border-radius: 0 0 16px 16px;
