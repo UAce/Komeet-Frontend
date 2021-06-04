@@ -1,14 +1,16 @@
 import React, { Dispatch, MutableRefObject, SetStateAction, useEffect, useRef } from "react";
-import { Form, Input, Button } from "antd";
+import { Form, Input, Button, notification } from "antd";
 import { EyeInvisibleOutlined, EyeTwoTone } from "@ant-design/icons";
 
-import { ParticipantData, SigninData } from "../../interfaces/ParticipantInterfaces";
+import { ParticipantData, SigninData } from "../../interfaces/SigninInterfaces";
+import { signin } from "../../common/api/SigninApis";
 
 interface SigninFormProps {
     setParticipantData: Dispatch<SetStateAction<ParticipantData | undefined>>;
+    eventId: string;
 }
 const { Item } = Form;
-const SigninForm: React.FC<SigninFormProps> = ({ setParticipantData }) => {
+const SigninForm: React.FC<SigninFormProps> = ({ setParticipantData, eventId }) => {
     const [form] = Form.useForm();
     const nameRef = useRef<Input>() as MutableRefObject<Input>; // Ugly hack to fit the type
     const layout = {
@@ -19,21 +21,18 @@ const SigninForm: React.FC<SigninFormProps> = ({ setParticipantData }) => {
     useEffect(() => {
         nameRef.current.input.focus();
     }, []);
-    const onFormFinish = async (values: SigninData) => {
+    const onFormFinish = async ({ username, password = "" }: SigninData) => {
         try {
-            console.log(values);
-            // TODO: sign in
-            // const participantData: SignInResponse = await signIn(values);
-            const participantData = { ...values, availabilities: [] };
+            const participantData: ParticipantData = await signin({ username, password, eventId });
             setParticipantData(participantData);
         } catch (error) {
             console.error(error);
-            // TODO: catch 401 for wrong password and show notification
-            // notification.error({
-            //     message: "Oops, something went wrong!",
-            //     description: "Failed to create event, please contact support.",
-            //     placement: "topRight"
-            // });
+            const message = error.response?.data?.message || "Oops, something went wrong!";
+            notification.error({
+                message,
+                description: "Failed to sign in",
+                placement: "bottomLeft"
+            });
         }
     };
     return (

@@ -1,9 +1,9 @@
 import { Skeleton, Spin } from "antd";
 import React from "react";
 
-interface LoaderProps {}
+interface PageLoaderProps {}
 
-const Loader: React.FC<LoaderProps> = () => {
+const PageLoader: React.FC<PageLoaderProps> = () => {
     return (
         <div style={{ textAlign: "center" }}>
             <Skeleton active />
@@ -13,4 +13,4 @@ const Loader: React.FC<LoaderProps> = () => {
     );
 };
 
-export default Loader;
+export default PageLoader;

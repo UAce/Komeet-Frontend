@@ -8,10 +8,12 @@ const prod = {
 
 const commonConfig = {
     paths: {
-        event: "/api/events"
+        event: "api/events",
+        signin: "api/signin"
     }
 };
 
+console.log(`Running [${process.env.NODE_ENV}] environment`);
 const envConfig = process.env.NODE_ENV === "production" ? prod : dev;
 const config = {
     ...commonConfig,

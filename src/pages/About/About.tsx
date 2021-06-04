@@ -4,7 +4,8 @@ import { Divider, Spin } from "antd";
 import "antd/dist/antd.css";
 
 import { getExampleEvent } from "../../common/api/EventsApis";
-import { Event, GetEventResponse } from "../../interfaces/EventInterfaces";
+import { Event, EventData } from "../../interfaces/EventInterfaces";
+import PageLoader from "../../components/PageLoader/PageLoader";
 
 interface AboutProps extends RouteComponentProps {}
 const About: React.FC<AboutProps> = ({ history }) => {
@@ -13,9 +14,8 @@ const About: React.FC<AboutProps> = ({ history }) => {
     useEffect(() => {
         const getEvent = async () => {
             try {
-                const currentEvent: GetEventResponse = await getExampleEvent();
+                const currentEvent: EventData = await getExampleEvent();
                 setEvent(currentEvent);
-                console.log(currentEvent);
             } catch (error) {
                 console.error(error);
             }
@@ -34,7 +34,7 @@ const About: React.FC<AboutProps> = ({ history }) => {
                     <span
                         className="link clickable"
                         onClick={() => {
-                            history.push(`/event/${event.id}`);
+                            history.push(`/event/${event.eventId}`);
                         }}
                     >
                         Example
@@ -42,7 +42,7 @@ const About: React.FC<AboutProps> = ({ history }) => {
                     event
                 </span>
             ) : (
-                <Spin />
+                <PageLoader />
             )}
         </div>
     );

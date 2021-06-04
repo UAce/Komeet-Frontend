@@ -9,7 +9,7 @@ import "antd/dist/antd.css";
 import "./CreateEventForm.scss";
 import { CheckboxChangeEvent } from "antd/lib/checkbox";
 import { CheckboxValueType } from "antd/lib/checkbox/Group";
-import { CalendarType, EventFormData, CreateEventResponse } from "../../interfaces/EventInterfaces";
+import { CalendarType, EventFormData, EventData } from "../../interfaces/EventInterfaces";
 import DebugInfo from "../DebugInfo/DebugInfo";
 import { createEvent } from "../../common/api/EventsApis";
 import CustomButton from "../CustomButton/CustomButton";
@@ -74,8 +74,8 @@ const CreateEventForm: React.FC<CreateEventFormProps> = ({ history }) => {
     const onFormFinish = async (values: EventFormData) => {
         try {
             setSubmitting(true);
-            const newEvent: CreateEventResponse = await createEvent(values);
-            history.push(`/event/${newEvent.id}`);
+            const newEvent: EventData = await createEvent(values);
+            history.push(`/event/${newEvent.eventId}`);
         } catch (error) {
             setSubmitting(false);
             console.error(error);
@@ -120,7 +120,7 @@ const CreateEventForm: React.FC<CreateEventFormProps> = ({ history }) => {
                         name="startTime"
                         tooltip="Events can only start at 9:00 AM"
                     >
-                        <Select defaultValue="9:00" disabled>
+                        <Select value="9:00" disabled>
                             ]<Option value="9:00">9:00 AM</Option>
                         </Select>
                     </Item>
@@ -130,7 +130,7 @@ const CreateEventForm: React.FC<CreateEventFormProps> = ({ history }) => {
                         name="endTime"
                         tooltip="Events can only end at 12:00 AM"
                     >
-                        <Select defaultValue="00:00" disabled>
+                        <Select value="00:00" disabled>
                             ]<Option value="00:00">12:00 AM</Option>
                         </Select>
                     </Item>
@@ -140,7 +140,7 @@ const CreateEventForm: React.FC<CreateEventFormProps> = ({ history }) => {
                         name="timezone"
                         tooltip="Only America/Montreal timezone is supported at the moment"
                     >
-                        <Select defaultValue="America/Montreal" disabled>
+                        <Select value="America/Montreal" disabled>
                             ]<Option value="America/Montreal">America/Montreal</Option>
                         </Select>
                     </Item>

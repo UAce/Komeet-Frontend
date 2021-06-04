@@ -31,7 +31,7 @@ const CopyToClipboard: React.FC<CopyToClipboardProps> = ({ text, content, ...but
             >
                 {copied ? "Copied!" : text}
             </Button>
-            <textarea ref={textAreaRef} className="dummy-textarea" value={content} />
+            <textarea ref={textAreaRef} className="dummy-textarea" value={content} readOnly />
         </div>
     );
 };

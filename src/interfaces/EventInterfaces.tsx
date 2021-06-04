@@ -1,5 +1,3 @@
-import { AxiosResponse } from "axios";
-
 export type CalendarType = "dates" | "days";
 
 export interface BaseEvent {
@@ -10,7 +8,7 @@ export interface BaseEvent {
 }
 
 export interface Event extends BaseEvent {
-    id: string;
+    eventId: string;
     startTime: string; // 24h format
     endTime: string; // 24h format
     timezone: string; // default America/Montreal
@@ -33,8 +31,7 @@ export interface Event extends BaseEvent {
         ]
     }
  */
-export interface GetEventResponse extends Event {}
-export interface CreateEventResponse extends Event {}
+export interface EventData extends Event {}
 
 /**
  * EventFormData e.g.
