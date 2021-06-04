@@ -13,7 +13,7 @@ import "./EventPage.scss";
 
 interface EventPageProps extends RouteComponentProps<{ eventId: string }> {}
 
-const EventPage: React.FC<EventPageProps> = ({ match }) => {
+const EventPage: React.FC<EventPageProps> = ({ match, history }) => {
     const [event, setEvent] = useState<Event>();
     const [eventLink, setEventLink] = useState<string>("");
     const [participantData, setParticipantData] = useState<ParticipantData | undefined>();
@@ -25,6 +25,7 @@ const EventPage: React.FC<EventPageProps> = ({ match }) => {
                 setEventLink(`${window.location.origin}/event/${currentEvent.eventId}`);
             } catch (error) {
                 console.error(error);
+                history.push(`/404`);
             }
         };
         getEvent();

@@ -1,24 +1,24 @@
 import React from "react";
 import "antd/dist/antd.css";
+
 import { RouteComponentProps, withRouter } from "react-router-dom";
 import { Modal } from "antd";
+import "./NotFound.scss";
 
 interface NotFoundProps extends RouteComponentProps {}
 const NotFound: React.FC<NotFoundProps> = ({ history }) => {
     return (
         <Modal
-            title="Page Not Found"
-            centered
+            centered={true}
             visible={true}
             closable={false}
-            onOk={() => {
-                history.push("/new-event");
-            }}
-            okText="Create an Event"
+            onOk={() => history.push("/new-event")}
+            okText={"Create an Event"}
             width={600}
             cancelButtonProps={{ style: { display: "none" } }}
         >
-            Oops, looks like the event you're looking for does not exist.
+            <h2>Oops! 😵</h2>
+            <p>The event you're looking for does not exist...</p>
         </Modal>
     );
 };
