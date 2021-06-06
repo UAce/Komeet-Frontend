@@ -1,6 +1,4 @@
 import React from "react";
-import { Tooltip, Divider, Space } from "antd";
-import { QuestionCircleOutlined } from "@ant-design/icons";
 import "react-infinite-calendar/styles.css"; // Make sure to import the default stylesheet
 import "antd/dist/antd.css";
 

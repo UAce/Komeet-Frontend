@@ -29,22 +29,23 @@
         margin: 0.2em;
         border: 2px solid transparent;
         border-radius: 8px;
-        background: rgb(204, 219, 255);
     }
     .availabilityDate {
         display: flex;
         flex-direction: column;
         align-self: stretch;
         width: fit-content;
-    }
-    .availabilitySlot {
-        align-self:stretch;
-        height: 3em;
-        width: 3em;
-        margin: 0.2em;
-        border: 2px solid transparent;
-        border-radius: 0.15em;
         background: rgb(204, 219, 255);
+
+    }
+    .availabilitySlots {
+        align-self:stretch;
+        height: 1em;
+        width: 100%;
+        margin: 0 auto;
+        border: 1px solid gray;
+        border-radius: 0;
+        background: rgb(224, 234, 255);
         cursor: pointer;
     }
 }

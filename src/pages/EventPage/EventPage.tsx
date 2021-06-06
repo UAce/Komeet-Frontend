@@ -67,13 +67,13 @@ const EventPage: React.FC<EventPageProps> = ({ match, history }) => {
                                     Selection {event.eventType}:
                                     <div className="availabilities">
                                         {event.possibleDates.map((item) => {
-                                            // const timeSlots = new Array(slots).fill(null);
+                                            const timeSlots = new Array(slots).fill(null);
                                             return (
                                                 <div className="availabilityDate">
                                                     <div>{item}</div>
-                                                    {/* {timeSlots.map(() => (
+                                                    {timeSlots.map(() => (
                                                         <div className="availabilitySlots"></div>
-                                                    ))} */}
+                                                    ))}
                                                 </div>
                                             );
                                         })}
