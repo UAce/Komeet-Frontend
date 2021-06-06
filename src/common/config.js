@@ -9,7 +9,7 @@ const prod = {
 const commonConfig = {
     paths: {
         event: "api/events",
-        signin: "api/signin"
+        signin: "api/participants/signin"
     }
 };
 

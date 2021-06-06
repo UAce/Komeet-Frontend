@@ -1,51 +1,15 @@
-import React, { useEffect, useState } from "react";
-import { RouteComponentProps, withRouter } from "react-router";
-import { Divider, Spin } from "antd";
+import React from "react";
 import "antd/dist/antd.css";
 
-import { getExampleEvent } from "../../common/api/EventsApis";
-import { Event, EventData } from "../../interfaces/EventInterfaces";
-import PageLoader from "../../components/PageLoader/PageLoader";
+import PageTitle from "../../components/PageTitle/PageTitle";
 
-interface AboutProps extends RouteComponentProps {}
-const About: React.FC<AboutProps> = ({ history }) => {
-    const [event, setEvent] = useState<Event>();
-
-    useEffect(() => {
-        const getEvent = async () => {
-            try {
-                const currentEvent: EventData = await getExampleEvent();
-                setEvent(currentEvent);
-            } catch (error) {
-                console.error(error);
-            }
-        };
-        getEvent();
-    }, []);
+interface AboutProps {}
+const About: React.FC<AboutProps> = () => {
     return (
         <div>
-            <div className="page-title">
-                <h1>About</h1>
-                <Divider />
-            </div>
-            {event ? (
-                <span>
-                    See{" "}
-                    <span
-                        className="link clickable"
-                        onClick={() => {
-                            history.push(`/event/${event.eventId}`);
-                        }}
-                    >
-                        Example
-                    </span>{" "}
-                    event
-                </span>
-            ) : (
-                <PageLoader />
-            )}
+            <PageTitle title="About" />
         </div>
     );
 };
 
-export default withRouter(About);
+export default About;

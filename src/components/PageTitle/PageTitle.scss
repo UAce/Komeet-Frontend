@@ -1,0 +1,23 @@
+.page-title {
+    align-items: center;
+    
+    header {
+        display: flex;
+        align-items: center;
+        justify-content: flex-start;
+    }
+    h1 {
+        display: inline-block;
+        font-size: 1.8em;
+        text-transform: capitalize;
+        margin-right: 0.5rem;
+        margin-bottom: 0;
+    }
+    .description {
+        color: #b1b1b1;
+    }
+    .anticon {
+        justify-self: left;
+        margin-bottom: 0;
+    }
+}

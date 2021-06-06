@@ -4,9 +4,7 @@ export interface SigninData {
     eventId: string;
 }
 
-export interface ParticipantData {
-    participantId: string;
+export interface IParticipant {
     username: string;
-    eventId: string;
     availabilities: number[][];
 }

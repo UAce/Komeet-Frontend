@@ -3,7 +3,7 @@ import { Layout } from "antd";
 import "antd/dist/antd.css";
 
 import HeaderMenu from "../HeaderMenu/HeaderMenu";
-import Logo from "../Logo/Logo";
+import Logo from "../Widgets/Logo/Logo";
 import "./AppHeader.scss";
 
 interface AppHeaderProps {}

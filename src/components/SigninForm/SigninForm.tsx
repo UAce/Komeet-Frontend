@@ -2,15 +2,15 @@ import React, { Dispatch, MutableRefObject, SetStateAction, useEffect, useRef } 
 import { Form, Input, Button, notification } from "antd";
 import { EyeInvisibleOutlined, EyeTwoTone } from "@ant-design/icons";
 
-import { ParticipantData, SigninData } from "../../interfaces/SigninInterfaces";
+import { IParticipant, SigninData } from "../../common/interfaces/ParticipantsInterfaces";
 import { signin } from "../../common/api/SigninApis";
 
 interface SigninFormProps {
-    setParticipantData: Dispatch<SetStateAction<ParticipantData | undefined>>;
+    setParticipant: Dispatch<SetStateAction<IParticipant | undefined>>;
     eventId: string;
 }
 const { Item } = Form;
-const SigninForm: React.FC<SigninFormProps> = ({ setParticipantData, eventId }) => {
+const SigninForm: React.FC<SigninFormProps> = ({ setParticipant, eventId }) => {
     const [form] = Form.useForm();
     const nameRef = useRef<Input>() as MutableRefObject<Input>; // Ugly hack to fit the type
     const layout = {
@@ -23,14 +23,13 @@ const SigninForm: React.FC<SigninFormProps> = ({ setParticipantData, eventId }) 
     }, []);
     const onFormFinish = async ({ username, password = "" }: SigninData) => {
         try {
-            const participantData: ParticipantData = await signin({ username, password, eventId });
-            setParticipantData(participantData);
+            const participant: IParticipant = await signin({ username, password, eventId });
+            setParticipant(participant);
         } catch (error) {
-            console.error(error);
-            const message = error.response?.data?.message || "Oops, something went wrong!";
+            console.error(error.response);
+            const message = error.response?.data?.message || "Failed to sign in";
             notification.error({
                 message,
-                description: "Failed to sign in",
                 placement: "bottomLeft"
             });
         }

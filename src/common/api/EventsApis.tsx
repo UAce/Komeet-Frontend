@@ -1,6 +1,6 @@
 import axios, { AxiosResponse } from "axios";
 
-import { EventData, EventFormData } from "../../interfaces/EventInterfaces";
+import { IEvent, EventFormData } from "../interfaces/EventsInterfaces";
 import config from "../config";
 
 const eventAxios = axios.create({
@@ -8,18 +8,12 @@ const eventAxios = axios.create({
     // headers: {}
 });
 
-// For testing
-export const getExampleEvent = async (): Promise<EventData> => {
-    const { data: event }: AxiosResponse = await eventAxios.get("/example");
-    return event;
-};
-
-export const getEventById = async (eventId: string): Promise<EventData> => {
+export const getEventById = async (eventId: string): Promise<IEvent> => {
     const { data: event }: AxiosResponse = await eventAxios.get(`/${eventId}`);
     return event;
 };
 
-export const createEvent = async (eventData: EventFormData): Promise<EventData> => {
+export const createEvent = async (eventData: EventFormData): Promise<IEvent> => {
     const { data: newEvent }: AxiosResponse = await eventAxios.post("/", eventData);
     return newEvent;
 };

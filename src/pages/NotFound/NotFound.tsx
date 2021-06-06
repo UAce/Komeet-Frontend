@@ -1,8 +1,8 @@
 import React from "react";
-import "antd/dist/antd.css";
-
 import { RouteComponentProps, withRouter } from "react-router-dom";
 import { Modal } from "antd";
+import "antd/dist/antd.css";
+
 import "./NotFound.scss";
 
 interface NotFoundProps extends RouteComponentProps {}

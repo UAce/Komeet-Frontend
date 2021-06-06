@@ -9,10 +9,10 @@ import "antd/dist/antd.css";
 import "./CreateEventForm.scss";
 import { CheckboxChangeEvent } from "antd/lib/checkbox";
 import { CheckboxValueType } from "antd/lib/checkbox/Group";
-import { CalendarType, EventFormData, EventData } from "../../interfaces/EventInterfaces";
-import DebugInfo from "../DebugInfo/DebugInfo";
-import { createEvent } from "../../common/api/EventsApis";
-import CustomButton from "../CustomButton/CustomButton";
+import { EventType, EventFormData, IEvent } from "../../../common/interfaces/EventsInterfaces";
+// import DebugInfo from "../../../components/Widgets/DebugInfo/DebugInfo";
+import { createEvent } from "../../../common/api/EventsApis";
+import CustomButton from "../../../components/CustomButton/CustomButton";
 
 interface CreateEventFormProps extends RouteComponentProps {}
 const { Group: CheckboxGroup } = Checkbox;
@@ -28,7 +28,7 @@ const CreateEventForm: React.FC<CreateEventFormProps> = ({ history }) => {
     const thisWeek = new Date(today.getFullYear(), today.getMonth(), today.getDate());
     const [form] = Form.useForm();
     const nameRef = useRef<Input>() as MutableRefObject<Input>;
-    const [calendarType, setCalendarType] = useState<CalendarType>("dates");
+    const [eventType, setEventType] = useState<EventType>("dates");
     const [selectedDates, setSelectedDates] = useState<Date[]>([]);
     const [selectedDays, setSelectedDays] = useState<CheckboxValueType[]>([]);
     const [checkAll, setCheckAll] = useState<boolean>(false);
@@ -45,44 +45,42 @@ const CreateEventForm: React.FC<CreateEventFormProps> = ({ history }) => {
                 ? ([] as Date[]).concat(selected, [date])
                 : ([] as Date[]).concat(selected.slice(0, index), selected.slice(index + 1));
         setSelectedDates(currentlySelected);
-        form.setFieldsValue({ selected: datesToString(currentlySelected) });
+        form.setFieldsValue({ possibleDates: datesToString(currentlySelected) });
         return currentlySelected;
     };
     const onDayCheck = (currentlySelected: CheckboxValueType[]) => {
         setSelectedDays(currentlySelected);
-        form.setFieldsValue({ selected: currentlySelected });
+        form.setFieldsValue({ possibleDates: currentlySelected });
         setIndeterminate(!!currentlySelected.length && currentlySelected.length < weekDaysOptions.length);
         setCheckAll(currentlySelected.length === weekDaysOptions.length);
     };
     const onCheckAllChange = (e: CheckboxChangeEvent) => {
         const currentlySelected = e.target.checked ? weekDaysOptions : [];
         setSelectedDays(currentlySelected);
-        form.setFieldsValue({ selected: currentlySelected });
+        form.setFieldsValue({ possibleDates: currentlySelected });
         setIndeterminate(false);
         setCheckAll(e.target.checked);
     };
 
     // Form Handlers
     const onFormChange = (eventFormData: EventFormData) => {
-        if (eventFormData.calendarType) {
-            setCalendarType(eventFormData.calendarType);
-            const currentlySelected =
-                eventFormData.calendarType === "dates" ? datesToString(selectedDates) : selectedDays;
-            form.setFieldsValue({ selected: currentlySelected });
+        if (eventFormData.eventType) {
+            setEventType(eventFormData.eventType);
+            const currentlySelected = eventFormData.eventType === "dates" ? datesToString(selectedDates) : selectedDays;
+            form.setFieldsValue({ possibleDates: currentlySelected });
         }
     };
     const onFormFinish = async (values: EventFormData) => {
         try {
             setSubmitting(true);
-            const newEvent: EventData = await createEvent(values);
-            history.push(`/event/${newEvent.eventId}`);
+            const newEvent: IEvent = await createEvent(values);
+            history.push(`/event/${newEvent._id}`);
         } catch (error) {
             setSubmitting(false);
-            console.error(error);
+            console.error(error.response);
             notification.error({
-                message: "Oops, something went wrong!",
-                description: "Failed to create event, please contact support.",
-                placement: "topRight"
+                message: error.response?.data?.message || "Failed to create event",
+                placement: "bottomLeft"
             });
         }
     };
@@ -95,7 +93,7 @@ const CreateEventForm: React.FC<CreateEventFormProps> = ({ history }) => {
             form={form}
             name="createEventForm"
             layout="vertical"
-            initialValues={{ calendarType }}
+            initialValues={{ eventType }}
             onValuesChange={onFormChange}
             onFinish={onFormFinish}
             scrollToFirstError={true}
@@ -125,13 +123,13 @@ const CreateEventForm: React.FC<CreateEventFormProps> = ({ history }) => {
                         </Select>
                     </Item>
                     <Item
-                        initialValue="00:00"
+                        initialValue="24:00"
                         label="End Time"
                         name="endTime"
                         tooltip="Events can only end at 12:00 AM"
                     >
-                        <Select value="00:00" disabled>
-                            ]<Option value="00:00">12:00 AM</Option>
+                        <Select value="24:00" disabled>
+                            ]<Option value="24:00">12:00 AM</Option>
                         </Select>
                     </Item>
                     <Item
@@ -146,21 +144,21 @@ const CreateEventForm: React.FC<CreateEventFormProps> = ({ history }) => {
                     </Item>
                 </div>
                 <div className="form-subcontainer">
-                    <Item name="calendarType" style={{ marginBottom: "0" }}>
-                        <Group buttonStyle="solid" value={calendarType}>
+                    <Item name="eventType" style={{ marginBottom: "0" }}>
+                        <Group buttonStyle="solid" value={eventType}>
                             <Button style={{ borderRadius: "8px 0 0 8px" }} value="dates">
                                 SPECIFIC DATES
                             </Button>
-                            <Button style={{ borderRadius: "0 8px 8px 0" }} value="days">
+                            <Button style={{ borderRadius: "0 8px 8px 0" }} value="weekdays">
                                 DAYS OF WEEK
                             </Button>
                         </Group>
                     </Item>
-                    {calendarType === "dates" ? (
+                    {eventType === "dates" ? (
                         <Item
                             style={{ marginTop: "0" }}
-                            name="selected"
-                            id="weekdays"
+                            name="possibleDates"
+                            id="dates"
                             rules={[{ required: true, message: "Please select at least one date" }]}
                         >
                             <MultipleDatesCalendar
@@ -175,9 +173,9 @@ const CreateEventForm: React.FC<CreateEventFormProps> = ({ history }) => {
                         </Item>
                     ) : (
                         <Item
-                            id="calendar"
-                            name="selected"
-                            rules={[{ required: true, message: "Please select at least one day of the week" }]}
+                            id="weekdays"
+                            name="possibleDates"
+                            rules={[{ required: true, message: "Please select at least one day" }]}
                         >
                             <Checkbox indeterminate={indeterminate} onChange={onCheckAllChange} checked={checkAll}>
                                 Check all
@@ -190,9 +188,7 @@ const CreateEventForm: React.FC<CreateEventFormProps> = ({ history }) => {
             </div>
 
             <Divider />
-            <Item>
-                <CustomButton text="Create Event" htmlType="submit" loading={submitting} />
-            </Item>
+            <CustomButton text="Create Event" htmlType="submit" loading={submitting} />
             {/* <DebugInfo data={form.getFieldsValue()} /> */}
         </Form>
     );

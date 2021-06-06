@@ -1,6 +1,6 @@
 import axios, { AxiosResponse } from "axios";
 
-import { ParticipantData, SigninData } from "../../interfaces/SigninInterfaces";
+import { IParticipant, SigninData } from "../interfaces/ParticipantsInterfaces";
 import config from "../config";
 
 const signinAxios = axios.create({
@@ -8,7 +8,7 @@ const signinAxios = axios.create({
     // headers: {}
 });
 
-export const signin = async (signinData: SigninData): Promise<ParticipantData> => {
+export const signin = async (signinData: SigninData): Promise<IParticipant> => {
     const { data: participant }: AxiosResponse = await signinAxios.post("/", signinData);
     return participant;
 };
