@@ -292,16 +292,16 @@ const AvailabilityGrid: React.FC<AvailabilityGridProps> = ({
     };
 
     const renderTimeLabel = (time: Date): JSX.Element => {
-        if (renderTimeLabel) {
-            return renderTimeLabel(time);
+        if (propsRenderTimeLabel) {
+            return propsRenderTimeLabel(time);
         } else {
             return <TimeText>{formatDate(time, timeFormat)}</TimeText>;
         }
     };
 
     const renderDateLabel = (date: Date): JSX.Element => {
-        if (renderDateLabel) {
-            return renderDateLabel(date);
+        if (propsRenderDateLabel) {
+            return propsRenderDateLabel(date);
         } else {
             return <DateLabel>{formatDate(date, dateFormat)}</DateLabel>;
         }
