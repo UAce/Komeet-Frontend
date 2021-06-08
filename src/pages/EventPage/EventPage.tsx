@@ -12,6 +12,7 @@ import SigninForm from "../../components/SigninForm/SigninForm";
 import { IParticipant } from "../../common/interfaces/ParticipantsInterfaces";
 import PageTitle from "../../components/PageTitle/PageTitle";
 import "./EventPage.scss";
+import AvailabilityGrid from "../../components/AvailabilityGrid/AvailabilityGrid";
 
 interface EventPageProps extends RouteComponentProps<{ eventId: string }> {}
 
@@ -90,6 +91,7 @@ const EventPage: React.FC<EventPageProps> = ({ match, history }) => {
                                     return <li>{participant.username}</li>;
                                 })}
                             </ul>
+                            <AvailabilityGrid />
                         </div>
                     </div>
                     <Divider />
