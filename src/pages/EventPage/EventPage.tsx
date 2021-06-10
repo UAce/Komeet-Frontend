@@ -91,7 +91,7 @@ const EventPage: React.FC<EventPageProps> = ({ match, history }) => {
                                     return <li>{participant.username}</li>;
                                 })}
                             </ul>
-                            <AvailabilityGrid />
+                            <AvailabilityGrid possibleDates={event.possibleDates} />
                         </div>
                     </div>
                     <Divider />

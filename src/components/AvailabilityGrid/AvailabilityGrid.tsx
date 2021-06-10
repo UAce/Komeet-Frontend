@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useRef } from "react";
 import styled from "styled-components";
 
 import addMinutes from "date-fns/add_minutes";
@@ -90,13 +90,9 @@ const TimeText = styled(Text)`
 `;
 
 interface AvailabilityGridProps {
+    possibleDates: Array<string>;
     selection?: Array<Date>;
     onChange?: (newSelection: Array<Date>) => void;
-    startDate?: Date;
-    numDays?: number;
-    minTime?: number;
-    maxTime?: number;
-    hourlyChunks?: number;
     dateFormat?: string;
     timeFormat?: string;
     columnGap?: string;
@@ -114,32 +110,59 @@ interface AvailabilityGridProps {
 }
 
 const AvailabilityGrid: React.FC<AvailabilityGridProps> = ({
+    possibleDates = [],
     selection = [],
     onChange = () => {},
-    startDate = new Date(),
-    numDays = 7,
-    minTime = 9,
-    maxTime = 23,
-    hourlyChunks = 1,
-    dateFormat = "M/D",
-    timeFormat = "ha",
+    dateFormat = "D MMM (ddd)",
+    timeFormat = "h:mm a",
     columnGap = "4px",
     rowGap = "4px",
-    selectedColor = "rgba(89, 154, 242, 1)",
+    selectedColor = "rgba(256, 154, 242, 1)",
     unselectedColor = "#dbedff",
-    hoveredColor = "rgba(162, 198, 248, 1)",
-    renderDateCell: propsRenderDateCell,
-    renderTimeLabel: propsRenderTimeLabel,
-    renderDateLabel: propsRenderDateLabel
+    hoveredColor = "rgba(162, 198, 248, 1)"
 }) => {
-    const [selectionScheme, setSelectionScheme] = useState<string>("square");
-    const [selectionDraft, setSelectionDraft] = useState<Date[]>([]); // pre-committed selection
+    const startTime: number = 9; // Hours
+    const endTime: number = 24; // Hours
+
+    const getDerivedStateFromProps = (): Partial<any> | null => {
+        // As long as the user isn't in the process of selecting, allow prop changes to re-populate selection state
+        if (selectionStart == null) {
+            return {
+                selectionDraft: [...selection],
+                dates: computeDatesMatrix()
+            };
+        }
+        return null;
+    };
+
+    const computeDatesMatrix = (): Array<Array<Date>> => {
+        const hourlyChunks = 2; // 2 blocks of 30mins
+        const minutesInChunk: number = 30; // 30mins chunks
+        const dates: Array<Array<Date>> = possibleDates.map((dateString: string) => {
+            const currentDay = [];
+            const day = startOfDay(dateString);
+            for (let hour = startTime; hour < endTime; hour += 1) {
+                for (let count = 0; count < hourlyChunks; count += 1) {
+                    currentDay.push(addMinutes(addHours(day, hour), count * minutesInChunk));
+                }
+            }
+            return currentDay;
+        });
+        console.log(dates);
+        return dates;
+    };
+
+    // console.log(possibleDates);
+    // const [gridRef, setGridRef] = useState<HTMLElement | null>(null);
+    const gridRef = useRef<HTMLDivElement>(null);
+    const [selectionDraft, setSelectionDraft] = useState<Date[]>([]); // pre-commistartTimeInMinutesed selection
     const [selectionAction, setSelectionAction] = useState<string | null>(null); // add or remove
     const [selectionStart, setSelectionStart] = useState<Date | null>(null);
     const [isTouchDragging, setIsTouchDragging] = useState<boolean>(false);
-    const [dates, setDates] = useState<Date[][]>([[new Date()]]);
+    const dates = computeDatesMatrix();
+    const numDays = dates.length;
+    const numTimes = dates[0].length;
     const cellToDate: Map<Element, Date> = new Map();
-    let gridRef: HTMLElement | null = null;
 
     const endSelection = () => {
         onChange(selectionDraft);
@@ -248,25 +271,19 @@ const AvailabilityGrid: React.FC<AvailabilityGridProps> = ({
                 cellToDate.set(dateCell, time);
             }
         };
-        if (propsRenderDateCell) {
-            return propsRenderDateCell(time, selected, refSetter);
-        } else {
-            return (
-                <DateCell
-                    selected={selected}
-                    ref={refSetter}
-                    selectedColor={selectedColor}
-                    unselectedColor={unselectedColor}
-                    hoveredColor={hoveredColor}
-                />
-            );
-        }
+        return (
+            <DateCell
+                selected={selected}
+                ref={refSetter}
+                selectedColor={selectedColor}
+                unselectedColor={unselectedColor}
+                hoveredColor={hoveredColor}
+            />
+        );
     };
 
     const renderFullDateGrid = (): Array<JSX.Element> => {
         const flattenedDates: Date[] = [];
-        const numDays = dates.length;
-        const numTimes = dates[0].length;
         for (let j = 0; j < numTimes; j += 1) {
             for (let i = 0; i < numDays; i += 1) {
                 flattenedDates.push(dates[i][j]);
@@ -292,19 +309,11 @@ const AvailabilityGrid: React.FC<AvailabilityGridProps> = ({
     };
 
     const renderTimeLabel = (time: Date): JSX.Element => {
-        if (propsRenderTimeLabel) {
-            return propsRenderTimeLabel(time);
-        } else {
-            return <TimeText>{formatDate(time, timeFormat)}</TimeText>;
-        }
+        return <TimeText>{formatDate(time, timeFormat)}</TimeText>;
     };
 
     const renderDateLabel = (date: Date): JSX.Element => {
-        if (propsRenderDateLabel) {
-            return propsRenderDateLabel(date);
-        } else {
-            return <DateLabel>{formatDate(date, dateFormat)}</DateLabel>;
-        }
+        return <DateLabel>{formatDate(date, dateFormat)}</DateLabel>;
     };
 
     const handleSelectionStartEvent = (startTime: Date) => {
@@ -316,15 +325,7 @@ const AvailabilityGrid: React.FC<AvailabilityGridProps> = ({
     };
     return (
         <Wrapper>
-            <Grid
-                columns={dates.length}
-                rows={dates[0].length}
-                columnGap={columnGap}
-                rowGap={rowGap}
-                ref={(el) => {
-                    gridRef = el;
-                }}
-            >
+            <Grid columns={numDays} rows={numTimes} columnGap={columnGap} rowGap={rowGap} ref={gridRef}>
                 {renderFullDateGrid()}
             </Grid>
         </Wrapper>
