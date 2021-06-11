@@ -1,4 +1,4 @@
-import React, { useState, useRef } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import styled from "styled-components";
 
 import addMinutes from "date-fns/add_minutes";
@@ -201,7 +201,7 @@ const AvailabilityGrid: React.FC<AvailabilityGridProps> = ({
     const handleMouseEnterEvent = (time: Date) => {
         // Need to update selection draft on mouseup as well in order to catch the cases
         // where the user just clicks on a single cell (because no mouseenter events fire
-        // in this scenario)
+        // in this scenario)'
         updateAvailabilityDraft(time);
     };
 
@@ -323,6 +323,29 @@ const AvailabilityGrid: React.FC<AvailabilityGridProps> = ({
         setSelectionAction(timeSelected ? "remove" : "add");
         setSelectionStart(startTime);
     };
+
+    useEffect(() => {
+        document.addEventListener("mouseup", endSelection);
+
+        // Prevent page scrolling when user is dragging on the date cells
+        cellToDate.forEach((value, dateCell) => {
+            if (dateCell && dateCell.addEventListener) {
+                // @ts-ignore
+                dateCell.addEventListener("touchmove", () => e.preventDefault(), { passive: false });
+            }
+        });
+
+        // Clean up
+        return () => {
+            document.removeEventListener("mouseup", endSelection);
+            cellToDate.forEach((value, dateCell) => {
+                if (dateCell && dateCell.removeEventListener) {
+                    // @ts-ignore
+                    dateCell.removeEventListener("touchmove", () => e.preventDefault());
+                }
+            });
+        };
+    }, []);
     return (
         <Wrapper>
             <Grid columns={numDays} rows={numTimes} columnGap={columnGap} rowGap={rowGap} ref={gridRef}>
