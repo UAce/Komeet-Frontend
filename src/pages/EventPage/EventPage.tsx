@@ -2,6 +2,7 @@ import React, { useEffect, useState } from "react";
 import { RouteComponentProps } from "react-router";
 import { Divider } from "antd";
 import moment from "moment";
+// import ScheduleSelector from "react-schedule-selector";
 
 // import config from "../../common/config";
 import { IEvent } from "../../common/interfaces/EventsInterfaces";
@@ -13,6 +14,7 @@ import { IParticipant } from "../../common/interfaces/ParticipantsInterfaces";
 import PageTitle from "../../components/PageTitle/PageTitle";
 import "./EventPage.scss";
 import AvailabilityGrid from "../../components/AvailabilityGrid/AvailabilityGrid";
+import ScheduleSelector from "../../thirdPartyComponents/ReactScheduleSelector/ScheduleSelector";
 
 interface EventPageProps extends RouteComponentProps<{ eventId: string }> {}
 
@@ -20,14 +22,9 @@ const EventPage: React.FC<EventPageProps> = ({ match, history }) => {
     const [event, setEvent] = useState<IEvent>();
     const [eventLink, setEventLink] = useState<string>("");
     const [participant, setParticipant] = useState<IParticipant | undefined>();
-    const [slots, setSlots] = useState<number>(0);
-    const getTimeSlots = (event: IEvent) => {
-        const start = new Date(`01/01/2007 ${event.startTime}`).getTime();
-        const end = new Date(`01/01/2007 ${event.endTime}`).getTime();
-        const diff = end - start;
-        const hours = diff / 1000 / 60 / 60;
-        setSlots(hours * 2);
-    };
+    const today = new Date().toISOString().split("T")[0];
+    const [selection, setSelection] = useState<Date[]>([]);
+
     useEffect(() => {
         const getEvent = async () => {
             try {
@@ -35,7 +32,9 @@ const EventPage: React.FC<EventPageProps> = ({ match, history }) => {
                 console.log(currentEvent);
                 setEvent(currentEvent);
                 setEventLink(`${window.location.origin}/event/${currentEvent._id}`);
-                getTimeSlots(currentEvent);
+                setSelection(currentEvent.possibleDates.map((dateStr: string) => new Date(dateStr)));
+                console.log(new Date(`${today} ${currentEvent.startTime}`).getHours());
+                console.log(new Date(`${today} ${currentEvent.endTime}`).getHours());
             } catch (error) {
                 console.error(error);
                 history.push(`/404`);
@@ -61,37 +60,42 @@ const EventPage: React.FC<EventPageProps> = ({ match, history }) => {
                                     <h2>{participant.username}'s Availability</h2>
                                     <p>Max Participants: {event.maxParticipants}</p>
                                     <p>Timezone: {event.timezone}</p>
-                                    <p>
-                                        Start Time: {moment(new Date(`01/01/2001 ${event.startTime}`)).format("HH:mm")}
-                                    </p>
-                                    <p>End Time: {moment(new Date(`01/01/2001 ${event.endTime}`)).format("HH:mm")}</p>
-                                    Selection {event.eventType}:
-                                    <div className="availabilities">
-                                        {event.possibleDates.map((item) => {
-                                            const timeSlots = new Array(slots).fill(null);
-                                            return (
-                                                <div className="availabilityDate">
-                                                    <div>{item}</div>
-                                                    {timeSlots.map(() => (
-                                                        <div className="availabilitySlots"></div>
-                                                    ))}
-                                                </div>
-                                            );
-                                        })}
+                                    <div>
+                                        <ScheduleSelector
+                                            possibleDates={event.possibleDates}
+                                            selection={selection}
+                                            minTime={new Date(`${today} ${event.startTime}`).getHours()}
+                                            hourlyChunks={2}
+                                            onChange={(newSelection: Date[]) => setSelection(newSelection)}
+                                            dateFormat="D MMM (ddd)"
+                                            timeFormat="h:mm a"
+                                            columnGap="4px"
+                                            rowGap="4px"
+                                        />
                                     </div>
                                 </div>
                             )}
                         </div>
                         <div className="event-page-subcontainer">
                             <h2>Group's Availability</h2>
-                            <p>TODO</p>
                             {event.participants.length} Participants:
                             <ul>
                                 {event.participants.map((participant) => {
                                     return <li>{participant.username}</li>;
                                 })}
                             </ul>
-                            <AvailabilityGrid possibleDates={event.possibleDates} />
+                            <ScheduleSelector
+                                possibleDates={event.possibleDates}
+                                selection={selection}
+                                minTime={new Date(`${today} ${event.startTime}`).getHours()}
+                                hourlyChunks={2}
+                                onChange={(newSelection: Date[]) => setSelection(newSelection)}
+                                dateFormat="D MMM (ddd)"
+                                timeFormat="h:mm a"
+                                columnGap="4px"
+                                rowGap="4px"
+                                readOnly={true}
+                            />
                         </div>
                     </div>
                     <Divider />

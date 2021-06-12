@@ -91,8 +91,6 @@ const TimeText = styled(Text)`
 
 interface AvailabilityGridProps {
     possibleDates: Array<string>;
-    selection?: Array<Date>;
-    onChange?: (newSelection: Array<Date>) => void;
     dateFormat?: string;
     timeFormat?: string;
     columnGap?: string;
@@ -111,8 +109,6 @@ interface AvailabilityGridProps {
 
 const AvailabilityGrid: React.FC<AvailabilityGridProps> = ({
     possibleDates = [],
-    selection = [],
-    onChange = () => {},
     dateFormat = "D MMM (ddd)",
     timeFormat = "h:mm a",
     columnGap = "4px",
@@ -122,7 +118,7 @@ const AvailabilityGrid: React.FC<AvailabilityGridProps> = ({
     hoveredColor = "rgba(162, 198, 248, 1)"
 }) => {
     const startTime: number = 9; // Hours
-    const endTime: number = 24; // Hours
+    const endTime: number = 10; // Hours
 
     const getDerivedStateFromProps = (): Partial<any> | null => {
         // As long as the user isn't in the process of selecting, allow prop changes to re-populate selection state
@@ -148,7 +144,6 @@ const AvailabilityGrid: React.FC<AvailabilityGridProps> = ({
             }
             return currentDay;
         });
-        console.log(dates);
         return dates;
     };
 
@@ -159,6 +154,8 @@ const AvailabilityGrid: React.FC<AvailabilityGridProps> = ({
     const [selectionAction, setSelectionAction] = useState<string | null>(null); // add or remove
     const [selectionStart, setSelectionStart] = useState<Date | null>(null);
     const [isTouchDragging, setIsTouchDragging] = useState<boolean>(false);
+    const [selection, setSelection] = useState<Date[]>([]);
+    const onChange = (newSelection: Date[]) => setSelection(newSelection);
     const dates = computeDatesMatrix();
     const numDays = dates.length;
     const numTimes = dates[0].length;
@@ -346,6 +343,10 @@ const AvailabilityGrid: React.FC<AvailabilityGridProps> = ({
             });
         };
     }, []);
+
+    useEffect(() => {
+        endSelection();
+      }, [selectionDraft]);
     return (
         <Wrapper>
             <Grid columns={numDays} rows={numTimes} columnGap={columnGap} rowGap={rowGap} ref={gridRef}>

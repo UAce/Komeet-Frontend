@@ -12,40 +12,40 @@
     margin: 0 0.5rem;
 }
 
-.availabilities {
-    display: -webkit-box;
-    display: -ms-flexbox;
-    display: flex;
-    flex-wrap: wrap;
-    align-items:flex-start;
-    align-content:flex-start;
-    justify-content: center;
-    border: 2px solid rgba(66, 68, 90, 0.075);
-    border-radius: 0.15em;
-    padding: 1em 0;
-    user-select: none;
+// .availabilities {
+//     display: -webkit-box;
+//     display: -ms-flexbox;
+//     display: flex;
+//     flex-wrap: wrap;
+//     align-items:flex-start;
+//     align-content:flex-start;
+//     justify-content: center;
+//     border: 2px solid rgba(66, 68, 90, 0.075);
+//     border-radius: 0.15em;
+//     padding: 1em 0;
+//     user-select: none;
 
-    div {
-        margin: 0.2em;
-        border: 2px solid transparent;
-        border-radius: 8px;
-    }
-    .availabilityDate {
-        display: flex;
-        flex-direction: column;
-        align-self: stretch;
-        width: fit-content;
-        background: rgb(204, 219, 255);
+//     div {
+//         margin: 0.2em;
+//         border: 2px solid transparent;
+//         border-radius: 8px;
+//     }
+//     .availabilityDate {
+//         display: flex;
+//         flex-direction: column;
+//         align-self: stretch;
+//         width: fit-content;
+//         background: rgb(204, 219, 255);
 
-    }
-    .availabilitySlots {
-        align-self:stretch;
-        height: 1em;
-        width: 100%;
-        margin: 0 auto;
-        border: 1px solid gray;
-        border-radius: 0;
-        background: rgb(224, 234, 255);
-        cursor: pointer;
-    }
-}
+//     }
+//     .availabilitySlots {
+//         align-self:stretch;
+//         height: 1em;
+//         width: 100%;
+//         margin: 0 auto;
+//         border: 1px solid gray;
+//         border-radius: 0;
+//         background: rgb(224, 234, 255);
+//         cursor: pointer;
+//     }
+// }
